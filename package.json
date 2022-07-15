@@ -1,0 +1,39 @@
+{
+  "name": "backend",
+  "version": "1.0.0",
+  "description": "unsplash-image",
+  "type": "module",
+  "main": "index.js",
+  "scripts": {
+    "test-entity": "mocha test/entity/*.spec.js",
+    "dev": "nodemon api/index.js"
+  },
+  "keywords": [
+    "api"
+  ],
+  "author": "richard",
+  "license": "ISC",
+  "devDependencies": {
+    "chai": "^4.3.6",
+    "mocha": "^10.0.0",
+    "nodemon": "^2.0.18",
+    "standard": "^17.0.0"
+  },
+  "eslintConfig": {
+    "extends": "./node_modules/standard/eslintrc.json"
+  },
+  "dependencies": {
+    "bcrypt": "^5.0.1",
+    "cors": "^2.8.5",
+    "dotenv": "^16.0.1",
+    "express": "^4.18.1",
+    "express-validator": "^6.14.2",
+    "jsonwebtoken": "^8.5.1",
+    "mongoose": "^6.4.3",
+    "morgan": "^1.10.0",
+    "nodemailer": "^6.7.7",
+    "pg": "^8.7.3",
+    "swagger-ui-express": "^4.4.0",
+    "yamljs": "^0.3.0"
+  }
+}

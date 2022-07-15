@@ -1,0 +1,988 @@
+openapi: 3.0.0
+info:
+  title: Spotplay
+  description: 'Es una plataforma de musica y mas ...'
+  contact:
+    email: suport@spotplay.com
+  license:
+    name: Apache 2.0
+    url: http://apac.....
+  version: 1.0.0
+servers:
+- url: http://localhost:4000/api/v1
+tags:
+- name: Song
+  description: Songs from each artist to save to a playlist. 
+- name: User
+  description: Users to use services
+- name: Playlist
+  description: Playlists to save songs
+- name: Artist
+  description: Artists that create songs
+- name: Genre
+  description: Song genre
+- name: Album
+  description: Albums from artists
+- name: SongPlaylist
+  description: manage songs within a playlist
+- name: Auth
+  description: Authenticate user when they login
+components:
+  ## securitySchemes:
+   ## bearerAuth:
+   ##   type: http
+     ##  scheme: bearer
+     ## bearerFormat: JWT
+  schemas:
+    hide: true
+    Auth:
+      type: object
+      properties:
+        username:
+          type: string
+        password:
+          type: string
+    SongPlaylist:
+      type: object
+      properties:
+        idPlaylist:
+          type: string
+        idSong:
+          type: string
+    SongPlaylistDelete:
+      type: object
+      properties:
+        id:
+          type: string
+    Song:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        title:
+          type: string
+        uri:
+          type: string
+        duration:
+          type: string
+        image: 
+          type: string
+        idAlbum:
+          type: integer
+          format: int64
+        idArtista:
+          type: integer
+          format: int32
+        idGenre:
+          type: integer
+          format: int32
+    SongPost:
+      type: object
+      properties:
+        title:
+          type: string
+        uri:
+          type: string
+        duration:
+          type: string
+        image: 
+          type: string
+        idAlbum:
+          type: integer
+          format: int64
+        idArtista:
+          type: integer
+          format: int32
+        idGenre:
+          type: integer
+          format: int32
+    SongDelete:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+    User:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        username:
+          type: string
+        email:
+          type: string
+        password:
+          type: string
+        role:
+          type: string
+    UserAuth:
+      type: object
+      properties:
+        username:
+          type: string
+        password:
+          type: string
+        
+    UserPost:
+      type: object
+      properties:
+        username:
+          type: string
+        email:
+          type: string
+        password:
+          type: string
+        role:
+          type: string
+    UserDelete: 
+      type: object
+      properties:
+        id: 
+          type: string
+    Playlist:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        title:
+          type: string
+        cover:
+          type: string
+        description:
+          type: string
+        idUsuario:
+          type: integer
+          format: int64
+    PlaylistDelete:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+    PlaylistPost:
+      type: object
+      properties:
+        title:
+          type: string
+        cover:
+          type: string
+        description:
+          type: string
+        idUsuario:
+          type: integer
+          format: int64
+    Artist:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        firstName:
+          type: string
+        lastName:
+          type: string
+        description:
+          type: string
+        avatar:
+          type: string
+    ArtistPost:
+      type: object
+      properties:
+        firstName:
+          type: string
+        lastName:
+          type: string
+        description:
+          type: string
+        avatar:
+          type: string
+    ArtistDelete:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+    Genre:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        name:
+          type: string
+    GenreDelete:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+    GenrePost:
+      type: object
+      properties:
+        name:
+          type: string
+    Album:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        name:
+          type: string
+        description:
+          type: string
+        image:
+          type: string
+    AlbumPost:
+      type: object
+      properties:
+        name:
+          type: string
+        description:
+          type: string
+        image:
+          type: string
+    AlbumDelete:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+paths:
+  /auth/signin:
+    post:
+      tags:
+      - Auth
+      summary: Authenticate user when they login and give a token for current session
+      operantionId: authenticationUser
+      description: Authenticate user login
+      requestBody:
+        description: write username and password
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserAuth'
+          application/xml:
+            schema:
+              $ref: '#/components/schemas/UserAuth'
+        required: true
+      responses:
+        200:
+          description: registro exitoso!
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserAuth'
+        400:
+          description: bad request
+          content: {}
+        404:
+          description: not found
+          content: {}
+  /user/signup:
+    post:
+      tags:
+      - User
+      summary: Create user
+      operantionId: createUser
+      description: New user is created, sends Welcome message to the user email. 
+      requestBody:
+        description: ingrese los datos del usuario a crear, si es usuario lector Role:lector
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserPost'
+          application/xml:
+            schema:
+              $ref: '#/components/schemas/UserPost'
+        required: true
+      responses:
+        200:
+          description: registro exitoso!
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserPost'
+        400:
+          description: bad request
+          content: {}
+        404:
+          description: not found
+          content: {}
+  /user/:
+    get:
+      tags:
+      - User
+      summary: get all Users
+      operantionId: getAllUsers
+      description: See all users
+      responses:
+        200:
+          description: registro exitoso!
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserPost'
+        400:
+          description: bad request
+          content: {}
+        404:
+          description: not found
+          content: {}
+    delete:
+      tags:
+      - User
+      summary: Delete current user
+      operantionId: deleteUser
+      description: Delete user
+      requestBody:
+        description: Write all data of user to delete
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserDelete'
+          application/xml:
+            schema:
+              $ref: '#/components/schemas/UserDelete'
+        required: true
+      responses:
+        200:
+          description: registro exitoso!
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        400:
+          description: bad request
+          content: {}
+        404:
+          description: not found
+          content: {}
+    put:
+      tags:
+      - User
+      summary: Update User
+      operantionId: updateUser
+      description: update a given user.
+      requestBody:
+        description: write the information of user to update.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+          application/xml:
+            schema:
+              $ref: '#/components/schemas/User'
+        required: true
+      responses:
+        200:
+          description: registro exitoso!
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        400:
+          description: bad request
+          content: {}
+        404:
+          description: not found
+          content: {}
+  /song/:
+    post:
+      tags:
+      - Song
+      summary: Create single song
+      operantionId: createSong
+      description: Se creara una nueva cancion.
+      requestBody:
+        description: Write song information. Requires user log in. 
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SongPost'
+          application/xml:
+            schema:
+              $ref: '#/components/schemas/SongPost'
+        required: true
+      responses:
+        200:
+          description: registro exitoso!
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SongPost'
+        400:
+          description: bad request
+          content: {}
+        404:
+          description: not found
+          content: {}
+    get:
+      tags:
+      - Song
+      summary: See all songs
+      operantionId: getAllSongs
+      description: Get all Songs. Requires user log in.
+      responses:
+        200:
+          description: registro exitoso!
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Song'
+        400:
+          description: bad request
+          content: {}
+        404:
+          description: not found
+          content: {}
+    delete:
+      tags:
+      - Song
+      summary: Delete current song
+      operantionId: deleteSong
+      description: Delete song
+      requestBody:
+        description: Write id of song to delete
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SongDelete'
+          application/xml:
+            schema:
+              $ref: '#/components/schemas/SongDelete'
+        required: true
+      responses:
+        200:
+          description: registro exitoso!
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SongDelete'
+        400:
+          description: bad request
+          content: {}
+        404:
+          description: not found
+          content: {}
+    put:
+      tags:
+      - Song
+      summary: Update Song
+      operantionId: updateSong
+      description: update a given song.
+      requestBody:
+        description: ingrese los datos de la cancion a actualizar.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Song'
+          application/xml:
+            schema:
+              $ref: '#/components/schemas/Song'
+        required: true
+      responses:
+        200:
+          description: registro exitoso!
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Song'
+        400:
+          description: bad request
+          content: {}
+        404:
+          description: not found
+          content: {}
+  /genre/:
+    post:
+      tags:
+      - Genre
+      summary: Create genre
+      operantionId: createGenre
+      description: create new type of genre
+      requestBody:
+        description: Write genre type
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GenrePost'
+          application/xml:
+            schema:
+              $ref: '#/components/schemas/GenrePost'
+        required: true
+      responses:
+        200:
+          description: registro exitoso!
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenrePost'
+        400:
+          description: bad request
+          content: {}
+        404:
+          description: not found
+          content: {}
+    get:
+      tags:
+      - Genre
+      summary: get all genres
+      operantionId: getAllGenres
+      description: See all genres.
+      responses:
+        200:
+          description: registro exitoso!
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Genre'
+        400:
+          description: bad request
+          content: {}
+        404:
+          description: not found
+          content: {}
+    delete:
+      tags:
+      - Genre
+      summary: Delete current genre
+      operantionId: deleteGenre
+      description: Delete genre
+      requestBody:
+        description: Write id of genre to delete
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GenreDelete'
+          application/xml:
+            schema:
+              $ref: '#/components/schemas/GenreDelete'
+        required: true
+      responses:
+        200:
+          description: registro exitoso!
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenreDelete'
+        400:
+          description: bad request
+          content: {}
+        404:
+          description: not found
+          content: {}
+    put:
+      tags:
+      - Genre
+      summary: Update Genre
+      operantionId: updateGenre
+      description: update a given genre.
+      requestBody:
+        description: ingrese los datos del genero a actualizar.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Genre'
+          application/xml:
+            schema:
+              $ref: '#/components/schemas/Genre'
+        required: true
+      responses:
+        200:
+          description: registro exitoso!
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Genre'
+        400:
+          description: bad request
+          content: {}
+        404:
+          description: not found
+          content: {}
+  /album/:
+    post:
+      tags:
+      - Album
+      summary: Create album
+      operantionId: createAlbum
+      description: create new album
+      requestBody:
+        description: Write album information
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AlbumPost'
+          application/xml:
+            schema:
+              $ref: '#/components/schemas/AlbumPost'
+        required: true
+      responses:
+        200:
+          description: registro exitoso!
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AlbumPost'
+        400:
+          description: bad request
+          content: {}
+        404:
+          description: not found
+          content: {}
+    get:
+      tags:
+      - Album
+      summary: get all Albums
+      operantionId: getAllAlbums
+      description: See all albums.
+      responses:
+        200:
+          description: registro exitoso!
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Album'
+        400:
+          description: bad request
+          content: {}
+        404:
+          description: not found
+          content: {}
+    delete:
+      tags:
+      - Album
+      summary: Delete album
+      operantionId: deleteAlbum
+      description: Delete an album
+      requestBody:
+        description: Delete album by writing id
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AlbumDelete'
+          application/xml:
+            schema:
+              $ref: '#/components/schemas/AlbumDelete'
+        required: true
+      responses:
+        200:
+          description: registro exitoso!
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AlbumDelete'
+        400:
+          description: bad request
+          content: {}
+        404:
+          description: not found
+          content: {}
+    put:
+      tags:
+      - Album
+      summary: Update album
+      operantionId: updateAlbum
+      description: update a given album.
+      requestBody:
+        description: update album by writing id and new info.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Album'
+          application/xml:
+            schema:
+              $ref: '#/components/schemas/Album'
+        required: true
+      responses:
+        200:
+          description: registro exitoso!
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Album'
+        400:
+          description: bad request
+          content: {}
+        404:
+          description: not found
+          content: {}
+  /playlist/:
+    post:
+      tags:
+      - Playlist
+      summary: Crear una playlist
+      operantionId: createPlaylist
+      description: Se creara una nueva playlist.
+      requestBody:
+        description: ingrese los datos de la playlist a crear.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PlaylistPost'
+          application/xml:
+            schema:
+              $ref: '#/components/schemas/PlaylistPost'
+        required: true
+      responses:
+        200:
+          description: registro exitoso!
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PlaylistPost'
+        400:
+          description: bad request
+          content: {}
+        404:
+          description: not found
+          content: {}
+    get:
+      tags:
+      - Playlist
+      summary: Ver todas las playlists
+      operantionId: getAllPlaylists
+      description: Ver playlists.
+      responses:
+        200:
+          description: registro exitoso!
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Playlist'
+        400:
+          description: bad request
+          content: {}
+        404:
+          description: not found
+          content: {}
+    delete:
+      tags:
+      - Playlist
+      summary: Delete current playlist
+      operantionId: deletePlaylist
+      description: Delete playlist
+      requestBody:
+        description: Write id of playlist to delete
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PlaylistDelete'
+          application/xml:
+            schema:
+              $ref: '#/components/schemas/PlaylistDelete'
+        required: true
+      responses:
+        200:
+          description: registro exitoso!
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PlaylistDelete'
+        400:
+          description: bad request
+          content: {}
+        404:
+          description: not found
+          content: {}
+    put:
+      tags:
+      - Playlist
+      summary: Update playlist
+      operantionId: updateSong
+      description: update playlist general info.
+      requestBody:
+        description: update playlist with id and new information.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Playlist'
+          application/xml:
+            schema:
+              $ref: '#/components/schemas/Playlist'
+        required: true
+      responses:
+        200:
+          description: registro exitoso!
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Playlist'
+        400:
+          description: bad request
+          content: {}
+        404:
+          description: not found
+          content: {}
+  /Artist/:
+    post:
+      tags:
+      - Artist
+      summary: Crear una artista
+      operantionId: createArtist
+      description: Se creara un nuevo artista.
+      requestBody:
+        description: ingrese los datos del artista a crear.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ArtistPost'
+          application/xml:
+            schema:
+              $ref: '#/components/schemas/ArtistPost'
+        required: true
+      responses:
+        200:
+          description: registro exitoso!
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ArtistPost'
+        400:
+          description: bad request
+          content: {}
+        404:
+          description: not found
+          content: {}
+    get:
+      tags:
+      - Artist
+      summary: Ver todos los artistas
+      operantionId: getAllArtists
+      description: Ver artists.
+      responses:
+        200:
+          description: registro exitoso!
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Artist'
+        400:
+          description: bad request
+          content: {}
+        404:
+          description: not found
+          content: {}
+    delete:
+      tags:
+      - Artist
+      summary: Eliminar artista
+      operantionId: getAllArtists
+      description: Ver artists.
+      requestBody:
+        description: ingrese los datos del artista a crear.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ArtistDelete'
+          application/xml:
+            schema:
+              $ref: '#/components/schemas/ArtistDelete'
+        required: true
+      responses:
+        200:
+          description: registro exitoso!
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ArtistDelete'
+        400:
+          description: bad request
+          content: {}
+        404:
+          description: not found
+          content: {}
+    put:
+      tags:
+      - Artist
+      summary: Update artist
+      operantionId: updateArtist
+      description: update a given artist.
+      requestBody:
+        description: ingrese los datos del artista a actualizar.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Artist'
+          application/xml:
+            schema:
+              $ref: '#/components/schemas/Artist'
+        required: true
+      responses:
+        200:
+          description: registro exitoso!
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Artist'
+        400:
+          description: bad request
+          content: {}
+        404:
+          description: not found
+          content: {}
+  /songPlaylist/addSong/:
+    post:
+      tags:
+      - SongPlaylist
+      summary: Add a song to a playlist
+      operantionId: createSongPlaylist
+      description: create new song to a playlist
+      requestBody:
+        description: Write idplaylist and idSong to add
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SongPlaylist'
+          application/xml:
+            schema:
+              $ref: '#/components/schemas/SongPlaylist'
+        required: true
+      responses:
+        200:
+          description: registro exitoso!
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SongPlaylist'
+        400:
+          description: bad request
+          content: {}
+        404:
+          description: not found
+          content: {}
+  /songPlaylist/deleteSong/:
+    delete:
+      tags:
+      - SongPlaylist
+      summary: Delete a song from playlist
+      operantionId: deleteSongPlaylist
+      description: Delete a song from a playlist
+      requestBody:
+        description: write id of idSong and idPlaylist to delete
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SongPlaylistDelete'
+          application/xml:
+            schema:
+              $ref: '#/components/schemas/SongPlaylistDelete'
+        required: true
+      responses:
+        200:
+          description: registro exitoso!
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SongPlaylistDelete'
+        400:
+          description: bad request
+          content: {}
+        404:
+          description: not found
+          content: {}
+    x-codegen-request-body-name: body
